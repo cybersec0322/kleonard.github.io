@@ -1,0 +1,14 @@
+These are the steps I took to create and secure a user and space in the file system for an authorized "Backup" user
+to conduct and edit his or her tasks. 
+
+as root:
+useradd Backup
+passwd Backup #ThisIsTheBackupPassphrase
+addgroup Backup
+mkdir /home/Backup/daily_scripts/
+mkdir /home/Backup/backups/
+vim /home/Backup/daily_scripts/Compressed_Daily.sh
+cp /home/codio/workspace/Kyle_Leonard.BASH /home/Backup/daily_scripts/FSBackup_Daily.sh
+chown -R Backup /home/Backup/
+chgrp -R Backup /home/Backup/
+chmod 750 -R /home/Backup/
