@@ -1,0 +1,57 @@
+#Original script:
+
+#Check Disk Usage of the Free_Space_Content file. This file displays the size of the NEW/ directory.
+du -hc /home/codio/workspace/NEW > /home/codio/workspace/NEW/Free_Space_Content.txt
+
+#Write the list contents of the OLD/ directory to the file OLD_Content.txt in the NEW/ directory.
+echo `ls -alh OLD/` > NEW/OLD_Content.txt
+
+#Write the date to the Time_File.txt file in the NEW/ directory
+echo `date` > NEW/Time_File.txt
+
+#Create a backup of the Free_Space_Content_OLD.txt file in the BACKUP/ directory. Change the end of the file's name
+#to match the directory.
+cp OLD/Free_Space_Content_OLD.txt BACKUP/Free_Space_Content_BACKUP.txt
+
+#Create a backup of the Directory_Content_OLD.txt file in the BACKUP/ directory. Change the end of the file's name
+#to match the directory.
+cp OLD/Directory_Content_OLD.txt BACKUP/Directory_Content_BACKUP.txt
+
+#Create a backup of the Time_File_OLD.txt file in the BACKUP/ directory. Change the end of the file's name
+#to match the directory.
+cp OLD/Time_File_OLD.txt BACKUP/Time_File_BACKUP.txt
+
+#Copy all contents from NEW/ into BACKUP/ without copying the NEW/ directory itself. Note the "." in the command
+cp -R NEW/. BACKUP/
+
+#Clear the NEW/ directory
+rm -r NEW/*
+
+#As an addition to the original assignment tasks I appended the use of tar, the tape or disk archive tool.
+#This creates a compressed backup of the entire /home/Backup/ directory, labeled by date, and writes it to
+#the /home/Backup/backups/ directory.
+
+#First, assign the path to the DEST_FILE variable. Include the naming convention using the date.
+DEST_FILE="/home/Backup/backups/backup_$(date +%Y%m%d).tar.gz"
+
+#Call the tar command. Create the archive (-c), use an archive file (-f) and  compress it (-z). The -C / option prevents
+#path related errors from tar.
+tar -czf $DEST_FILE -C / home/Backup
+
+_________________________________________________________________________________________________________________________
+
+#New script:
+
+#First, start at /home/
+cd /home/
+
+#Call the tar command - create the archive (c), use an archive file (f) and compress it (J).
+#Pipe the tar command to GPG to encrypt it. The -c option password protects the file.
+#(THIS PASSWORD MUST BE REMEMBERED AND IS REQUIRED FOR DECRYTPING)
+#Send the output of tar and gpg to the backup file with .tar, .gz and .gpg extensions.
+
+tar cJf - Backup/ | gpg -c > /home/Backup/backups/backup_$(date +%Y%m%d).tar.gz.gpg
+
+#Backup files can be decrypted with the following command:
+#(REMEMBER TO USE THE SAME PASSWORD USED WHEN ENCRYPTING THE FILE)
+#gpg -d /home/Backup/backups/<backup_file_name>.tar.gz.gpg | tar xvJ
